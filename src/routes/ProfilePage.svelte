@@ -229,7 +229,7 @@
 								{/if}
 							</div>
 							<p class="text-xl text-muted-foreground">@{profile.handle}</p>
-							<div class="w-24 w-full">
+							<div class="w-24">
 								{#if isSelf}
 									<ProfileSettings
 										userId={profile.id}
