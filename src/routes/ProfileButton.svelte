@@ -78,7 +78,7 @@
 				text="Verify my account"
 				outline={false}
 				small={false}
-				on:click={() => (window.location.href = 'https://discord.gg/XEXebe7Qzf')}
+				on:click={() => (window.location.href = 'https://discord.gg/MPB7YVHA5g')}
 			/>
 			<OutlineButton
 				icon={FileText}

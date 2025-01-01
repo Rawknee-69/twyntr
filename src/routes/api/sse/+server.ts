@@ -5,7 +5,7 @@ export const GET: RequestHandler = async ({ setHeaders }) => {
 	setHeaders({
 		'Content-Type': 'text/event-stream',
 		'Cache-Control': 'no-cache',
-		Connection: 'keep-alive',
+		'Connection': 'keep-alive',
 		'X-Accel-Buffering': 'no'
 	});
 
@@ -20,7 +20,7 @@ export const GET: RequestHandler = async ({ setHeaders }) => {
 					clearInterval(keepAliveInterval);
 					removeConnection(controller);
 				}
-			}, 20000); // Ping every 20 seconds
+			}, 15000); // Ping every 15 seconds
 
 			return () => {
 				clearInterval(keepAliveInterval);

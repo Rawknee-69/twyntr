@@ -2,7 +2,7 @@
 	export let twynt: string = '';
 
 	$: characterCount = twynt.length;
-	$: isOverLimit = characterCount > 280;
+	$: isOverLimit = characterCount > 300;
 
 	function handlePaste(event: ClipboardEvent) {
 		event.preventDefault();
@@ -31,6 +31,6 @@
 		on:keydown={interfere}
 	/>
 	<div class="absolute bottom-1 right-1 rounded px-1 text-sm" class:text-red-500={isOverLimit}>
-		{characterCount}/280
+		{characterCount}/300
 	</div>
 </div>

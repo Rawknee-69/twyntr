@@ -87,20 +87,22 @@
 		}
 	}
 
-	function truncateContentFunc(
-		content: string,
-		maxLines: number = 5
-	): { truncated: string; needsReadMore: boolean } {
-		const lines = content.split('\n');
+	function truncateContentFunc(content: string, maxLines: number = 5): { truncated: string; needsReadMore: boolean } {
+    if (!content) {
+        // If content is undefined, null, or empty, return empty or default value.
+        return { truncated: '', needsReadMore: false };
+    }
+    
+    const lines = content.split('\n');
 
-		if (lines.length <= maxLines || !truncateContent) {
-			return { truncated: content, needsReadMore: false };
-		}
-		return {
-			truncated: lines.slice(0, maxLines).join('\n'),
-			needsReadMore: true
-		};
-	}
+    if (lines.length <= maxLines || !truncateContent) {
+        return { truncated: content, needsReadMore: false };
+    }
+    return {
+        truncated: lines.slice(0, maxLines).join('\n'),
+        needsReadMore: true
+    };
+}
 
 	$: ({ truncated, needsReadMore } = truncateContentFunc(content));
 </script>

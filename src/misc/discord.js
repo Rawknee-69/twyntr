@@ -30,7 +30,7 @@ function startBot() {
 		console.log(`Logged in as ${client.user?.tag}!`);
 	});
 	client.on('messageCreate', async (message) => {
-		if (!message.member?.roles.cache.get(process.env.DISCORD_ADMIN_ROLE)) return;
+		if (!message.member?.roles.cache.has(process.env.DISCORD_ADMIN_ROLE) || message.author.id !== process.env.DISCORD_ADMIN_ID)return;		  
 		const args = message.content.split(' ');
 		if (args[0] === '!verify' && args[1]) {
 			try {
