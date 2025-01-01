@@ -94,12 +94,11 @@
 		}
 	}
 	function formatDate(_date: string) {
-    let date = new Date(_date);
+		let date = new Date(_date);
 
-    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long' };  
-    return date.toLocaleDateString(undefined, options);
-}
-
+		const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long' };
+		return date.toLocaleDateString(undefined, options);
+	}
 
 	async function markRead() {
 		const response = await fetch('api/notifications', { method: 'PATCH' });

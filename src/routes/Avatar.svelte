@@ -53,7 +53,7 @@
 		type="button"
 		on:click={handleClick}
 		on:keydown={handleKeyDown}
-		class="p-0 m-0 border-none bg-transparent"
+		class="m-0 border-none bg-transparent p-0"
 		aria-label="Change avatar image"
 	>
 		<img
