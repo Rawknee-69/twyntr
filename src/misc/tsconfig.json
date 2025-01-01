@@ -1,0 +1,13 @@
+{
+	"compilerOptions": {
+		"target": "es6",
+		"module": "esnext", // Set to esnext for ES modules
+		"lib": ["es6", "dom"],
+		"esModuleInterop": true,
+		"sourceMap": true,
+		"outDir": "./dist",
+		"rootDir": "./src",
+		"moduleResolution": "node" // needed for handling module resolution.
+	},
+	"include": ["*.ts"]
+}

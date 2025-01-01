@@ -21,12 +21,12 @@ export const GET: RequestHandler = async ({ cookies }) => {
 
 		const userId = jwtPayload.userId;
 
-                const unreadCountResult = await db
-                    .select({ count: count() })
-                    .from(notifications)
-                    .leftJoin(users, eq(notifications.sourceUserId, users.id))
-                    .leftJoin(twynts, eq(notifications.twyntId, twynts.id))
-                    .where(and(eq(notifications.userId, userId), eq(notifications.read, false)));
+		const unreadCountResult = await db
+			.select({ count: count() })
+			.from(notifications)
+			.leftJoin(users, eq(notifications.sourceUserId, users.id))
+			.leftJoin(twynts, eq(notifications.twyntId, twynts.id))
+			.where(and(eq(notifications.userId, userId), eq(notifications.read, false)));
 
 		return json(unreadCountResult[0] || { count: 0 }, { status: 200 });
 	} catch (error) {

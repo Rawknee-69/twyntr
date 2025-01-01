@@ -8,7 +8,7 @@ import sanitizeHtml from 'sanitize-html';
 import { Snowflake } from 'nodejs-snowflake';
 import sharp from 'sharp';
 import { minioClient } from '@/server/minio';
-import { deletetwynt, twyntObj,fetchReferencedtwynts } from '../util';
+import { deletetwynt, twyntObj, fetchReferencedtwynts } from '../util';
 import { sendMessage } from '@/sse';
 // import { isImageNsfw, NSFW_ERROR } from '@/moderation';
 import { sensitiveRatelimit } from '@/server/ratelimit';
@@ -159,7 +159,7 @@ export const GET: RequestHandler = async ({
 				throw new Error('Invalid JWT token');
 			}
 		} catch (error) {
-			userId = null
+			userId = null;
 		}
 	}
 	const twyntId = url.searchParams.get('id');

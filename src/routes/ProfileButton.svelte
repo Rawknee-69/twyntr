@@ -11,7 +11,7 @@
 	let opened = false;
 
 	export let src = 'https://github.com/face-hh.png';
-	export let name = 'Face oifneoangoaen kfpeakfpae';
+	export let name = 'Rem';
 	export let handle = '@rem';
 
 	function deleteAccount() {
@@ -34,7 +34,7 @@
 	}
 
 	function deleteAllCookies() {
-		localStorage.clear()
+		localStorage.clear();
 	}
 
 	async function logout() {

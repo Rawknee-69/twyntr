@@ -1,18 +1,25 @@
 {
-  "name": "misc",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "discord.js": "^14.15.3",
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2",
-    "node-fetch": "^3.3.2"
-  }
+	"name": "misc",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"type": "module",
+	"scripts": {
+		"test": "echo \"No test specified\" && exit 1",
+		"dev": "ts-node discord.ts"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"discord.js": "^14.15.3",
+		"dotenv": "^16.4.5",
+		"express": "^4.21.2",
+		"node-fetch": "^3.3.2"
+	},
+	"devDependencies": {
+		"ts-loader": "^9.5.1",
+		"ts-node": "^10.9.1",
+		"typescript": "^5.7.2"
+	}
 }

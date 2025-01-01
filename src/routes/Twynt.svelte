@@ -217,7 +217,7 @@
 					</div>
 				</button>
 			{/if}
-			<div class="mt-2 flex items-center justify-between gap-2 mb-1">
+			<div class="mb-1 mt-2 flex items-center justify-between gap-2">
 				<div class="flex items-center gap-2">
 					<OutlineButton
 						icon={MessageCircle}
@@ -306,7 +306,7 @@
 						outline={true}
 					/>
 				</div>
-				
+
 				<div class="ml-auto flex items-center gap-2">
 					<OutlineButton
 						icon={BarChart2}

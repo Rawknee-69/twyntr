@@ -3,7 +3,10 @@ import { twynts, likes, followers, users, notifications, history } from '@/serve
 import { and, eq, inArray, sql } from 'drizzle-orm';
 import sharp from 'sharp';
 
-export async function fetchReferencedtwynts(userId: string | null, parentId: string | null): Promise<any[]> {
+export async function fetchReferencedtwynts(
+	userId: string | null,
+	parentId: string | null
+): Promise<any[]> {
 	const referencedLynts: any[] = [];
 
 	async function fetchParent(currentParentId: string) {
@@ -31,7 +34,6 @@ export async function fetchReferencedtwynts(userId: string | null, parentId: str
 	return referencedLynts;
 }
 
-
 export const twyntObj = (userId: string) => {
 	return {
 		id: twynts.id,
@@ -46,9 +48,10 @@ export const twyntObj = (userId: string) => {
 		reposted: twynts.reposted,
 		parentId: twynts.parent,
 		has_image: twynts.has_image,
-		likeCount: sql<number>`(SELECT COUNT(*) FROM ${likes} WHERE ${likes.twynt_id} = ${twynts.id})`.as(
-			'likeCount'
-		),
+		likeCount:
+			sql<number>`(SELECT COUNT(*) FROM ${likes} WHERE ${likes.twynt_id} = ${twynts.id})`.as(
+				'likeCount'
+			),
 		likedByFollowed: sql<boolean>`exists(
         select 1 from ${followers}
         where ${followers.user_id} = ${userId}
@@ -173,7 +176,10 @@ export async function uploadAvatar(inputBuffer: Buffer, fileName: string, minioC
 export async function deletetwynt(twyntId: string) {
 	await db.transaction(async (trx) => {
 		// Get all comments under this twynt
-		const comments = await trx.select({ id: twynts.id }).from(twynts).where(eq(twynts.parent, twyntId));
+		const comments = await trx
+			.select({ id: twynts.id })
+			.from(twynts)
+			.where(eq(twynts.parent, twyntId));
 
 		const commentIds = comments.map((comment) => comment.id);
 		const allIds = [twyntId, ...commentIds];

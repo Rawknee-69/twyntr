@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS "followers" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "history" (
-	"id" text PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"user_id" text,
 	"twynt_id" text,
 	"created_at" timestamp DEFAULT now()
@@ -14,7 +14,18 @@ CREATE TABLE IF NOT EXISTS "history" (
 CREATE TABLE IF NOT EXISTS "likes" (
 	"twynt_id" text NOT NULL,
 	"user_id" text NOT NULL,
+	"liked_at" timestamp DEFAULT now(),
 	CONSTRAINT "likes_pkey" PRIMARY KEY("twynt_id","user_id")
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "notifications" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"user_id" text NOT NULL,
+	"type" text NOT NULL,
+	"source_user_id" text,
+	"twynt_id" text,
+	"read" boolean DEFAULT false,
+	"created_at" timestamp DEFAULT now()
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "twynts" (
@@ -28,16 +39,6 @@ CREATE TABLE IF NOT EXISTS "twynts" (
 	"created_at" timestamp DEFAULT now(),
 	"reposted" boolean DEFAULT false,
 	"parent" text
-);
---> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "notifications" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"user_id" text NOT NULL,
-	"type" text NOT NULL,
-	"source_user_id" text,
-	"twynt_id" text,
-	"read" boolean DEFAULT false,
-	"created_at" timestamp DEFAULT now()
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "users" (
@@ -91,18 +92,6 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "twynts" ADD CONSTRAINT "twynts_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
- ALTER TABLE "twynts" ADD CONSTRAINT "twynts_parent_twynts_id_fk" FOREIGN KEY ("parent") REFERENCES "public"."twynts"("id") ON DELETE no action ON UPDATE no action;
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
  ALTER TABLE "notifications" ADD CONSTRAINT "notifications_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
@@ -116,6 +105,18 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "notifications" ADD CONSTRAINT "notifications_twynt_id_twynts_id_fk" FOREIGN KEY ("twynt_id") REFERENCES "public"."twynts"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "twynts" ADD CONSTRAINT "twynts_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "twynts" ADD CONSTRAINT "twynts_parent_twynts_id_fk" FOREIGN KEY ("parent") REFERENCES "public"."twynts"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

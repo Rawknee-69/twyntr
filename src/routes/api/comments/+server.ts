@@ -113,7 +113,9 @@ async function incrementViewCounts(twyntIds: string[]) {
 	try {
 		await db.transaction(async (tx) => {
 			await Promise.all(
-				twyntIds.map((id) => tx.execute(sql`UPDATE ${twynts} SET views = views + 1 WHERE id = ${id}`))
+				twyntIds.map((id) =>
+					tx.execute(sql`UPDATE ${twynts} SET views = views + 1 WHERE id = ${id}`)
+				)
 			);
 		});
 	} catch (error) {

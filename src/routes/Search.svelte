@@ -47,7 +47,7 @@
 	}
 </script>
 
-<div class="mx-auto flex h-full w-full flex-col items-center mt-5">
+<div class="mx-auto mt-5 flex h-full w-full flex-col items-center">
 	<h1 class="mb-4 text-2xl font-bold">Search twynts</h1>
 	<div class="mb-4 flex w-full p-1">
 		<Input

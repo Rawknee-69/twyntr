@@ -1,8 +1,8 @@
 // This is not included in Shadcn UI.
-import Root from "./musicplayer.svelte";
+import Root from './musicplayer.svelte';
 
 export {
 	Root,
 	//
-	Root as MusicPlayer,
+	Root as MusicPlayer
 };

@@ -24,8 +24,7 @@
 	};
 
 	async function checkAuthAndProfileStatus() {
-		if (Cookies.get('temp-discord-token'))
-			authenticated = true;
+		if (Cookies.get('temp-discord-token')) authenticated = true;
 		try {
 			const response = await fetch('/api/me', {
 				method: 'GET',

@@ -124,7 +124,7 @@
 	}
 
 	async function getTwyntr(TwyntrOpened: string) {
-		const response = await fetch('api/Twyntr?id=' + TwyntrOpened, { method: 'GET' });
+		const response = await fetch('api/twynt?id=' + TwyntrOpened, { method: 'GET' });
 
 		if (response.status !== 200) toast('Error loading Twyntr!');
 
@@ -135,53 +135,51 @@
 		return res as FeedItem;
 	}
 	async function fetchFeed(append = false) {
-    try {
-        const excludePosts = feed.map((post: any) => post.id).join(',');
-        console.log('Exclude Posts:', excludePosts);
+		try {
+			const excludePosts = feed.map((post: any) => post.id).join(',');
+			console.log('Exclude Posts:', excludePosts);
 
-        const response = await fetch(
-            `api/feed?type=${currentTab}&excludePosts=${excludePosts}`,
-            { method: 'GET' }
-        );
+			const response = await fetch(`api/feed?type=${currentTab}&excludePosts=${excludePosts}`, {
+				method: 'GET'
+			});
 
-        if (response.status !== 200) {
-            toast('Error generating feed! Please refresh the page.');
-            return;
-        }
+			if (response.status !== 200) {
+				toast('Error generating feed! Please refresh the page.');
+				return;
+			}
 
-        const res = await response.json();
-        console.log('API Response:', res);
+			const res = await response.json();
+			console.log('API Response:', res);
 
-        if (!res.twynts || !Array.isArray(res.twynts)) {
-            toast('Invalid feed response. Please refresh the page.');
-            console.warn('twynts missing or invalid. Response:', res);
-            return;
-        }
+			if (!res.twynts || !Array.isArray(res.twynts)) {
+				toast('Invalid feed response. Please refresh the page.');
+				console.warn('twynts missing or invalid. Response:', res);
+				return;
+			}
 
-        const newPosts = res.twynts.map((post: any) => ({ ...post }));
+			const newPosts = res.twynts.map((post: any) => ({ ...post }));
 
-        if (append) {
-            const uniqueNewPosts = newPosts.filter(
-                (newPost: any) => !feed.some((existingPost: any) => existingPost.id === newPost.id)
-            );
+			if (append) {
+				const uniqueNewPosts = newPosts.filter(
+					(newPost: any) => !feed.some((existingPost: any) => existingPost.id === newPost.id)
+				);
 
-            feed = feed.concat(uniqueNewPosts);
+				feed = feed.concat(uniqueNewPosts);
 
-            if (feed.length > 250) {
-                feed = feed.slice(50);
-            }
-        } else {
-            feed = newPosts;
-        }
-    } catch (error) {
-        console.error('Error fetching feed:', error);
-        toast('Error generating feed! Please refresh the page.');
-    } finally {
-		loadingFeed = false;
-		loadingTab = false;
-    }
-}
-
+				if (feed.length > 250) {
+					feed = feed.slice(50);
+				}
+			} else {
+				feed = newPosts;
+			}
+		} catch (error) {
+			console.error('Error fetching feed:', error);
+			toast('Error generating feed! Please refresh the page.');
+		} finally {
+			loadingFeed = false;
+			loadingTab = false;
+		}
+	}
 
 	function updateURL(newPath: string) {
 		goto(newPath, { replaceState: true, noScroll: true });
@@ -192,7 +190,8 @@
 
 		TwyntrOpened = id;
 		referencedTwyntrs = [];
-		selectedTwyntr = feed.find((Twyntr) => Twyntr.id === TwyntrOpened) || (await getTwyntr(TwyntrOpened));
+		selectedTwyntr =
+			feed.find((Twyntr) => Twyntr.id === TwyntrOpened) || (await getTwyntr(TwyntrOpened));
 
 		comments = await getComments(TwyntrOpened);
 		loadingComments = false;
@@ -250,7 +249,7 @@
 	});
 
 	async function renderTwyntrAtTop(TwyntrId: string) {
-		const Twyntr = await getTwyntr(TwyntrId)
+		const Twyntr = await getTwyntr(TwyntrId);
 		feed = [Twyntr].concat(feed);
 	}
 	function handlePaste(event: ClipboardEvent) {
@@ -310,24 +309,24 @@
 								class="flex h-full w-full flex-col gap-2 overflow-y-auto px-1 py-2"
 								bind:this={feedContainer}
 							>
-							{#if loadingTab}
-							{#each Array(skeletonCount) as _}
-								<Skeleton />
-							{/each}
-						{:else if loadingFeed}
-							<LoadingSpinner />
-						{:else}
-							{#each feed as lynt}
-								<Twynt {...lynt} myId={id} twyntClick={handletwyntClick} />
-							{/each}
-						{/if}
-						{#if loadingBottomFeed}
-							<LoadingSpinner />
-						{/if}
-					</div>
+								{#if loadingTab}
+									{#each Array(skeletonCount) as _}
+										<Skeleton />
+									{/each}
+								{:else if loadingFeed}
+									<LoadingSpinner />
+								{:else}
+									{#each feed as lynt}
+										<Twynt {...lynt} myId={id} twyntClick={handletwyntClick} />
+									{/each}
+								{/if}
+								{#if loadingBottomFeed}
+									<LoadingSpinner />
+								{/if}
+							</div>
+						</div>
+					{/if}
 				</div>
-			{/if}
-		</div>
 				{#if TwyntrOpened && selectedTwyntr}
 					<div class="mb-2 h-full w-full max-w-[530px] pb-10">
 						<button

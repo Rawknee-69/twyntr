@@ -1,4 +1,3 @@
-<!-- src/components/ProfilePage.svelte -->
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { toast } from 'svelte-sonner';
@@ -18,10 +17,10 @@
 	import TopTab from './TopTab.svelte';
 
 	export let profileHandle: string;
-	export let handletwyntClick;
+	export let handletwyntClick: (id: string) => Promise<void>;
 	export let myId: string;
-	
-	let profile: {
+
+	interface ProfileData {
 		username: string;
 		handle: string;
 		iq: number;
@@ -31,14 +30,33 @@
 		followers: number;
 		bio: string;
 		verified: boolean;
-	};
-	let usertwynts: any[] = [];
+	}
+
+	interface TwyntData {
+		id: string;
+		content: string;
+		userId: string;
+		created_at: string;
+		likes: number;
+		retwynts: number;
+		replies: number;
+		liked: boolean;
+		retwynted: boolean;
+	}
+
+	interface TwyntResponse {
+		twynts: TwyntData[];
+	}
+
+	let profile: ProfileData | null = null;
+	let usertwynts: TwyntResponse | null = null;
 	let loading = true;
 	let isSelf = false;
 	let isFollowing = false;
 	let isFollowedBy = false;
 	let followersCount = 0;
 	let followingCount = 0;
+	let avatar = '';
 
 	let showFollowersPopup = false;
 	let showFollowingPopup = false;
@@ -64,13 +82,15 @@
 			const response = await fetch(`/api/profile?handle=${profileHandle}`);
 
 			if (response.status === 200) {
-				profile = await response.json();
-				isSelf = profile.id === 'currentUserId'; // Replace 'currentUserId' with actual current user's ID
+				const profileData = await response.json();
+				profile = profileData;
+				isSelf = profileData.id === myId;
+				avatar = cdnUrl(profileData.id, 'big');
 			} else {
 				toast(`Failed to load profile. Error: ${response.status}`);
 			}
 		} catch (error) {
-			if (isSelf) return
+			if (isSelf) return;
 			console.error('Error fetching profile:', error);
 			toast('Failed to load profile');
 		}
@@ -78,7 +98,9 @@
 
 	async function fetchUsertwynts(fetchLikes: boolean) {
 		try {
-			const response = await fetch(`/api/feed?handle=${profileHandle}${fetchLikes ? '&type=Liked' : ''}`);
+			const response = await fetch(
+				`/api/feed?handle=${profileHandle}${fetchLikes ? '&type=Liked' : ''}`
+			);
 
 			if (response.status === 200) {
 				usertwynts = await response.json();
@@ -86,13 +108,15 @@
 				toast(`Failed to load user twynts. Error: ${response.status}`);
 			}
 		} catch (error) {
-			if (isSelf) return
+			if (isSelf) return;
 			console.error('Error fetching user twynts:', error);
 			toast('Failed to load user twynts');
 		}
 	}
 
 	async function toggleFollow() {
+		if (!profile) return;
+
 		try {
 			const response = await fetch('/api/follow', {
 				method: 'POST',
@@ -112,13 +136,15 @@
 				toast(error.error);
 			}
 		} catch (error) {
-			if (isSelf) return
+			if (isSelf) return;
 			console.error('Error toggling follow:', error);
 			toast('Failed to update follow status');
 		}
 	}
 
 	async function checkFollowStatus() {
+		if (!profile) return;
+
 		try {
 			const response = await fetch(`/api/follow?userId=${profile.id}`);
 			if (response.ok) {
@@ -132,13 +158,15 @@
 				toast(error.error);
 			}
 		} catch (error) {
-			if (isSelf) return
+			if (isSelf) return;
 			console.error('Error checking follow status:', error);
 			toast('Failed to check follow status');
 		}
 	}
 
 	async function fetchFollowCounts() {
+		if (!profile) return;
+
 		try {
 			const followersResponse = await fetch(
 				`/api/followlist?userId=${profile.id}&type=followers&page=1`
@@ -156,17 +184,18 @@
 				toast('Failed to fetch follow counts');
 			}
 		} catch (error) {
-			if (isSelf) return
+			if (isSelf) return;
 			console.error('Error fetching follow counts:', error);
 			toast('Failed to fetch follow counts');
 		}
 	}
-	let avatar: string;
+
 	onMount(async () => {
 		await fetchProfile();
-		await Promise.all([fetchUsertwynts(false), checkFollowStatus(), fetchFollowCounts()]);
+		if (profile) {
+			await Promise.all([fetchUsertwynts(false), checkFollowStatus(), fetchFollowCounts()]);
+		}
 		loading = false;
-		avatar = cdnUrl(profile.id, 'big');
 	});
 </script>
 
@@ -176,65 +205,72 @@
 	<div class="h-full w-full flex-grow overflow-hidden pl-1">
 		<div class="mr-[-17px] h-full overflow-y-auto overflow-x-hidden pr-[17px]">
 			<div class="mt-2">
-<div class="flex justify-between items-center px-2">
-				<div class="flex items-center gap-4">
-					<Avatar size={40} src={avatar} alt={profile.username} border={true} />
-					<div class="flex flex-col gap-2">
-						<div class="inline-flex items-center gap-2">
-							<Label class="text-2xl font-bold text-primary">{profile.username}</Label>
-							{#if profile.verified}
-								<Tooltip.Root>
-									<Tooltip.Trigger>
-<div class="flex items-center h-full w-7">
-		<img
-											class="h-7 w-7"
-											src={$mode !== 'light' ? 'white_mode_verified.png' : 'verified.png'}
-											alt="This user is verified."
-										/>
-	</div>								</Tooltip.Trigger>
-									<Tooltip.Content>
-										<p>This user is <span class="rounded-xl bg-border p-1">verified</span>.</p>
-									</Tooltip.Content>
-								</Tooltip.Root>
+				<div class="flex items-center justify-between px-2">
+					<div class="flex items-center gap-4">
+						<Avatar size={40} src={avatar} alt={profile.username} border={true} />
+						<div class="flex flex-col gap-2">
+							<div class="inline-flex items-center gap-2">
+								<Label class="text-2xl font-bold text-primary">{profile.username}</Label>
+								{#if profile.verified}
+									<Tooltip.Root>
+										<Tooltip.Trigger>
+											<div class="flex h-full w-7 items-center">
+												<img
+													class="h-7 w-7"
+													src={$mode !== 'light' ? 'white_mode_verified.png' : 'verified.png'}
+													alt="This user is verified."
+												/>
+											</div>
+										</Tooltip.Trigger>
+										<Tooltip.Content>
+											<p>This user is <span class="rounded-xl bg-border p-1">verified</span>.</p>
+										</Tooltip.Content>
+									</Tooltip.Root>
+								{/if}
+							</div>
+							<p class="text-xl text-muted-foreground">@{profile.handle}</p>
+							<div class="w-24 w-full">
+								{#if isSelf}
+									<ProfileSettings
+										userId={profile.id}
+										username={profile.username}
+										bio={profile.bio}
+									/>
+								{:else}
+									<Button class="w-full" on:click={toggleFollow}>
+										{isFollowing ? 'Unfollow' : 'Follow'}
+									</Button>
+								{/if}
+							</div>
+							{#if isFollowedBy}
+								<p class="text-sm text-muted-foreground">Follows you</p>
 							{/if}
 						</div>
-						<p class="text-xl text-muted-foreground">@{profile.handle}</p>
-						<div class="w-24 w-full">
-							{#if isSelf}
-							
-	<ProfileSettings
-									userId={profile.id}
-									username={profile.username}
-									bio={profile.bio}
-								/>							{:else}
-								<Button class="w-full" on:click={toggleFollow}>
-									{isFollowing ? 'Unfollow' : 'Follow'}
-								</Button>
-							{/if}
-						</div>
-						{#if isFollowedBy}
-							<p class="text-sm text-muted-foreground">Follows you</p>
-						{/if}
 					</div>
-				</div>
-<div class="md:hidden {!isSelf ? "hidden" : ""}">
-     <ProfileButton />
-</div>
+					<div class="md:hidden {!isSelf ? 'hidden' : ''}">
+						<ProfileButton />
+					</div>
 				</div>
 
 				<div class="mt-4 inline-flex gap-4">
-					<span
-						class="cursor-pointer font-bold text-primary hover:underline"
+					<button
+						type="button"
+						class="cursor-pointer border-none bg-transparent p-0 font-bold text-primary hover:underline"
 						on:click={toggleFollowingPopup}
+						on:keydown={(e) => e.key === 'Enter' && toggleFollowingPopup()}
+						aria-label="Show following list"
 					>
 						{followingCount.toLocaleString()} following
-					</span>
-					<span
-						class="cursor-pointer font-bold text-primary hover:underline"
+					</button>
+					<button
+						type="button"
+						class="cursor-pointer border-none bg-transparent p-0 font-bold text-primary hover:underline"
 						on:click={toggleFollowersPopup}
+						on:keydown={(e) => e.key === 'Enter' && toggleFollowersPopup()}
+						aria-label="Show followers list"
 					>
 						{followersCount.toLocaleString()} followers
-					</span>
+					</button>
 				</div>
 
 				<FollowListPopup
@@ -276,11 +312,11 @@
 				</blockquote>
 			</div>
 
-			<div class="flex flex-col gap-3 max-w-[600px]">
+			<div class="flex max-w-[600px] flex-col gap-3">
 				<Separator class="mt-3" />
-				<TopTab {tabs} {currentTab} onTabChange={handleTabChange}/>
+				<TopTab {tabs} {currentTab} onTabChange={handleTabChange} />
 				<Separator />
-				{#if usertwynts.length === 0}
+				{#if !usertwynts?.twynts?.length}
 					<p>No twynts yet.</p>
 				{:else}
 					{#each usertwynts.twynts as twynt}

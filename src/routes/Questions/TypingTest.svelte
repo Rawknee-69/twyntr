@@ -26,7 +26,7 @@
 		'honesty is the best policy',
 		'laughter is the best medicine',
 		'necessity is the mother of invention',
-		'a picture is worth a thousand words',
+		'a picture is worth a thousand words'
 	];
 
 	let unusedPhrases: string[] = [];

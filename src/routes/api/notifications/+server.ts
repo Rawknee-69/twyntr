@@ -33,7 +33,7 @@ export const GET: RequestHandler = async ({ cookies }) => {
 				sourceUserCreatedAt: users.created_at,
 				sourceUserBio: users.bio,
 				twyntContent: twynts.content,
-                                twyntId: notifications.twyntId,
+				twyntId: notifications.twyntId,
 				read: notifications.read,
 				createdAt: notifications.createdAt
 			})

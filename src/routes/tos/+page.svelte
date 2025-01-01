@@ -39,8 +39,8 @@
 				<AccordionContent>
 					<p>
 						Twyntr is a social media platform that allows users to create, share, and interact with
-						short-form content called "twynts". Our service includes features such as following other
-						users, liking and sharing content, and receiving notifications.
+						short-form content called "twynts". Our service includes features such as following
+						other users, liking and sharing content, and receiving notifications.
 					</p>
 				</AccordionContent>
 			</AccordionItem>
@@ -98,9 +98,9 @@
 				<AccordionContent>
 					<p>
 						The Twyntr service, including its original content, features, and functionality, is
-						created and operated by REM. While we haven't registered formal intellectual
-						property rights, we kindly ask users to respect our work. Users agree not to copy,
-						modify, or distribute any part of the service without explicit permission from REM.
+						created and operated by REM. While we haven't registered formal intellectual property
+						rights, we kindly ask users to respect our work. Users agree not to copy, modify, or
+						distribute any part of the service without explicit permission from REM.
 					</p>
 				</AccordionContent>
 			</AccordionItem>
@@ -154,8 +154,7 @@
 				<AccordionTrigger>11. Contact Us</AccordionTrigger>
 				<AccordionContent>
 					<p>
-						If you have any questions about these Terms, please contact us at
-						rawknee.6069@gmail.com
+						If you have any questions about these Terms, please contact us at rawknee.6069@gmail.com
 					</p>
 				</AccordionContent>
 			</AccordionItem>

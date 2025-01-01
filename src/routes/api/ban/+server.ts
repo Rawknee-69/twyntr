@@ -31,20 +31,20 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 			return json({ error: 'User not found' }, { status: 404 });
 		}
 
-        setTimeout(async () => {
-            try {
-                const usertwynts = await db
-                    .select({ id: twynts.id })
-                    .from(twynts)
-                    .where(eq(twynts.user_id, userId));
+		setTimeout(async () => {
+			try {
+				const usertwynts = await db
+					.select({ id: twynts.id })
+					.from(twynts)
+					.where(eq(twynts.user_id, userId));
 
-                for (const twynt of usertwynts) {
-                    await deletetwynt(twynt.id);
-                }
+				for (const twynt of usertwynts) {
+					await deletetwynt(twynt.id);
+				}
 			} catch (error) {
-                console.error('Error deleting twynts:', error);
-            }
-        }, 0);
+				console.error('Error deleting twynts:', error);
+			}
+		}, 0);
 
 		const token = cookies.get('authToken');
 		if (token) {

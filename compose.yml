@@ -13,7 +13,7 @@ services:
     ports:
       - '5444:5444'
     networks:
-      - twynternet
+      - twyntrnet
 
   minio:
     networks:
